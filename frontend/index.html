@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayTrack — Merchant Operations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="#" class="brand">
+            <span class="brand-mark">p.</span>
+            <span>paytrack<small>MERCHANT OPERATIONS</small></span>
+        </a>
+
+        <p class="nav-label">WORKSPACE</p>
+        <nav>
+            <a href="#" class="nav-link">
+                <span>01</span> Overview
+            </a>
+            <a href="#issues" class="nav-link active">
+                <span>02</span> Payment issues
+            </a>
+        </nav>
+
+        <div class="sidebar-note">
+            <span class="note-dot"></span>
+            LOCAL ENVIRONMENT
+            <p>Development workspace</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">AS</div>
+            <div>
+                <strong>Support team</strong>
+                <small>Workspace member</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="page-top">
+            <span>WORKSPACE / PAYMENT ISSUES</span>
+            <span class="date-label">PAYMENT OPERATIONS · 2026</span>
+        </header>
+
+        <section class="intro">
+            <div>
+                <p class="eyebrow">THE DAILY DESK <span>—</span> 01</p>
+                <h1>Payment<br><em>issues.</em></h1>
+                <p class="intro-text">
+                    A clearer view of the problems that need attention.
+                </p>
+            </div>
+
+            <div class="intro-action">
+                <span class="issue-caption">MERCHANT SUPPORT</span>
+                <button id="addIssueBtn" class="primary-button">
+                    <span>+</span> Log an issue
+                </button>
+            </div>
+        </section>
+
+        <section class="stats-strip">
+            <div class="stat-item">
+                <span class="stat-label">ALL ISSUES</span>
+                <strong id="totalCount">—</strong>
+                <span class="stat-note">Across all records</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">NEEDS ATTENTION</span>
+                <strong id="openCount">—</strong>
+                <span class="stat-note">Open or in progress</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">RESOLVED</span>
+                <strong id="resolvedCount">—</strong>
+                <span class="stat-note">Marked as resolved</span>
+            </div>
+
+            <div class="stat-aside">
+                <span class="orange-line"></span>
+                <p>Small issues, handled<br>one at a time.</p>
+            </div>
+        </section>
+
+        <section class="issues-section" id="issues">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CASE REGISTER <span>—</span> 02</p>
+                    <h2>The issue log</h2>
+                </div>
+                <button id="refreshBtn" class="text-button">
+                    ↻ Refresh records
+                </button>
+            </div>
+
+            <div class="toolbar">
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Find a transaction or merchant..."
+                    aria-label="Search payment issues"
+                >
+
+                <select id="statusFilter" aria-label="Filter by status">
+                    <option value="">Every status</option>
+                    <option value="OPEN">Open</option>
+                    <option value="IN_PROGRESS">In progress</option>
+                    <option value="RESOLVED">Resolved</option>
+                </select>
+
+                <select id="priorityFilter" aria-label="Filter by priority">
+                    <option value="">Every priority</option>
+                    <option value="HIGH">High priority</option>
+                    <option value="MEDIUM">Medium priority</option>
+                    <option value="LOW">Low priority</option>
+                </select>
+            </div>
+
+            <div id="message" class="message" role="status"></div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>REFERENCE / MERCHANT</th>
+                            <th>WHAT HAPPENED</th>
+                            <th>PRIORITY</th>
+                            <th>STATUS</th>
+                            <th>REPORTED</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="issuesTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                Fetching issue records...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <span>PAYTRACK / ISSUE REGISTER</span>
+                <span>FICTIONAL DATA FOR DEMONSTRATION</span>
+            </div>
+        </section>
+
+        <section id="issueFormSection" class="form-section" hidden>
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CASE DETAILS <span>—</span> 03</p>
+                    <h2 id="formTitle">Log a new issue</h2>
+                </div>
+                <span class="form-index">NEW ENTRY</span>
+            </div>
+
+            <p class="form-intro">
+                Add the details below. Fields marked with * are required.
+            </p>
+
+            <form id="issueForm">
+                <input type="hidden" id="issueId">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="transactionReference">
+                            Transaction reference *
+                        </label>
+                        <input
+                            type="text"
+                            id="transactionReference"
+                            maxlength="50"
+                            placeholder="e.g. TXN-1004"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="merchantName">Merchant name *</label>
+                        <input
+                            type="text"
+                            id="merchantName"
+                            maxlength="100"
+                            placeholder="e.g. Northstar Coffee"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="description">What happened? *</label>
+                        <textarea
+                            id="description"
+                            maxlength="500"
+                            rows="3"
+                            placeholder="Describe the payment issue..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priority">Priority *</label>
+                        <select id="priority" required>
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="HIGH">High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status *</label>
+                        <select id="status" required>
+                            <option value="OPEN">Open</option>
+                            <option value="IN_PROGRESS">In progress</option>
+                            <option value="RESOLVED">Resolved</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancelBtn" class="text-button">
+                        Cancel
+                    </button>
+                    <button type="submit" id="saveBtn" class="primary-button">
+                        Save issue <span>↗</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <footer class="page-footer">
+            <span>BUILT FOR BETTER FOLLOW-THROUGH.</span>
+            <span>PAYTRACK © 2026</span>
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
