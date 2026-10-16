@@ -15,6 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 import java.util.List;
 
@@ -67,8 +69,13 @@ public class SecurityConfig {
 
         http
             .cors(cors -> {})
-            .csrf(csrf -> csrf.ignoringRequestMatchers(
-                    "/api/auth/register", "/api/auth/login"))
+            .csrf(csrf -> csrf
+                    .csrfTokenRepository(
+                            CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .csrfTokenRequestHandler(
+                            new CsrfTokenRequestAttributeHandler())
+                    .ignoringRequestMatchers(
+                            "/api/auth/register", "/api/auth/login"))
             .authenticationProvider(authenticationProvider)
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))

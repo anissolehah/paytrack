@@ -4,13 +4,13 @@ import com.paytrack.paytrack.entity.PaymentIssue;
 import com.paytrack.paytrack.service.PaymentIssueService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/issues")
-@CrossOrigin(origins = "*")
 public class PaymentIssueController {
 
     private final PaymentIssueService service;
@@ -20,35 +20,39 @@ public class PaymentIssueController {
     }
 
     @GetMapping
-    public List<PaymentIssue> getAllIssues() {
-        return service.getAllIssues();
+    public List<PaymentIssue> getAllIssues(Authentication authentication) {
+        return service.getAllIssues(authentication.getName());
     }
 
     @GetMapping("/{id}")
-    public PaymentIssue getIssueById(@PathVariable Long id) {
-        return service.getIssueById(id)
-                .orElseThrow(() -> new RuntimeException("Issue not found"));
+    public PaymentIssue getIssueById(
+            @PathVariable Long id,
+            Authentication authentication) {
+        return service.getIssueById(id, authentication.getName());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentIssue createIssue(
-            @Valid @RequestBody PaymentIssue issue) {
-        return service.createIssue(issue);
+            @Valid @RequestBody PaymentIssue issue,
+            Authentication authentication) {
+        return service.createIssue(issue, authentication.getName());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteIssue(@PathVariable Long id) {
-        service.deleteIssue(id);
+    public void deleteIssue(
+            @PathVariable Long id,
+            Authentication authentication) {
+        service.deleteIssue(id, authentication.getName());
     }
 
     @PutMapping("/{id}")
     public PaymentIssue updateIssue(
             @PathVariable Long id,
-            @Valid @RequestBody PaymentIssue issue) {
-
-        return service.updateIssue(id, issue)
-                .orElseThrow(() -> new RuntimeException("Issue not found"));
+            @Valid @RequestBody PaymentIssue updatedIssue,
+            Authentication authentication) {
+        return service.updateIssue(
+                id, updatedIssue, authentication.getName());
     }
 }

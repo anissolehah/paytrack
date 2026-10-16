@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.csrf.CsrfToken;
 
 
 @RestController
@@ -94,6 +95,10 @@ public class AuthController {
                     "Invalid email or password"
             );
         }
+    }
+    @GetMapping("/csrf")
+    public String getCsrfToken(CsrfToken csrfToken) {
+        return csrfToken.getToken();
     }
 
 }
