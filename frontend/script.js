@@ -1,4 +1,38 @@
 const API_URL = "http://localhost:8080/api/issues";
+const AUTH_URL = "http://localhost:8080/api/auth";
+
+// Send requests with the login session cookie
+async function apiFetch(url, options = {}) {
+    const method = (options.method || "GET").toUpperCase();
+
+    const headers = new Headers(options.headers || {});
+
+    // Get the CSRF token for requests that change data
+    if (["POST", "PUT", "DELETE", "PATCH"].includes(method)) {
+        const csrfResponse = await fetch(`${AUTH_URL}/csrf`, {
+            credentials: "include"
+        });
+
+        if (!csrfResponse.ok) {
+            throw new Error("Unable to get security token. Please log in again.");
+        }
+
+        const csrfData = await csrfResponse.json();
+        headers.set("X-XSRF-TOKEN", csrfData.token);
+    }
+
+    const response = await fetch(url, {
+        ...options,
+        headers,
+        credentials: "include"
+    });
+
+    if (response.status === 401 || response.status === 403) {
+        throw new Error("Your session may have expired. Please log in again.");
+    }
+
+    return response;
+}
 
 // Get the HTML elements we need
 const issuesTableBody = document.getElementById("issuesTableBody");
@@ -60,7 +94,7 @@ async function loadIssues() {
     `;
 
     try {
-        const response = await fetch(API_URL);
+        const response = await apiFetch(API_URL);
 
         if (!response.ok) {
             throw new Error("Unable to retrieve payment issues.");
@@ -260,7 +294,7 @@ async function saveIssue(event) {
     saveButton.disabled = true;
 
     try {
-        const response = await fetch(
+        const response = await apiFetch(
             id ? `${API_URL}/${id}` : API_URL,
             {
                 method: id ? "PUT" : "POST",
@@ -311,7 +345,7 @@ async function deleteIssue(id) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await apiFetch(`${API_URL}/${id}`, {
             method: "DELETE"
         });
 
@@ -362,6 +396,32 @@ issuesTableBody.addEventListener("click", event => {
         deleteIssue(id);
     }
 });
+
+document.getElementById("logoutBtn")
+    .addEventListener("click", async () => {
+        try {
+            // Uses your existing apiFetch function, which automatically handles
+            // fetching the CSRF token and attaching the X-XSRF-TOKEN header.
+            const logoutResponse = await apiFetch("http://localhost:8080/logout", {
+                method: "POST"
+            });
+
+            if (!logoutResponse.ok) {
+                throw new Error(`Unable to log out. Status: ${logoutResponse.status}`);
+            }
+
+            // Successfully logged out, redirect to login page
+            window.location.href = "login.html";
+
+        } catch (error) {
+            console.error("Logout error:", error);
+            if (typeof showMessage === "function") {
+                showMessage(error.message, true);
+            } else {
+                alert(error.message);
+            }
+        }
+    });
 
 // Load existing issues when the page opens
 loadIssues();

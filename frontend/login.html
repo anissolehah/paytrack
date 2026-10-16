@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | PayTrack</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="auth-container">
+        <h1>PayTrack</h1>
+        <p>Log in to manage your payment issues.</p>
+
+        <form id="loginForm">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email"
+                   autocomplete="email" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password"
+                   autocomplete="current-password" required>
+
+            <button type="submit">Log in</button>
+            <p id="message" role="alert"></p>
+        </form>
+
+        <p>Don't have an account? <a href="register.html">Register</a></p>
+    </main>
+
+    <script>
+        const form = document.getElementById("loginForm");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            message.textContent = "Logging in...";
+
+            const body = {
+                email: document.getElementById("email").value.trim(),
+                password: document.getElementById("password").value
+            };
+
+            try {
+                const response = await fetch(
+                    "http://localhost:8080/api/auth/login",
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(body)
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Login failed. Please check your email and password."
+                    );
+                }
+
+                window.location.href = "index.html";
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>

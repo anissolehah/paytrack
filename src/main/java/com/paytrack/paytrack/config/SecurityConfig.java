@@ -1,6 +1,10 @@
+
 package com.paytrack.paytrack.config;
 
 import com.paytrack.paytrack.service.CustomUserDetailsService;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,11 +16,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 import java.util.List;
 
@@ -35,29 +39,59 @@ public class SecurityConfig {
 
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider(userDetailsService);
+
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration) throws Exception {
+            AuthenticationConfiguration configuration)
+            throws Exception {
+
         return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public CookieCsrfTokenRepository csrfTokenRepository() {
+        CookieCsrfTokenRepository repository =
+                CookieCsrfTokenRepository.withHttpOnlyFalse();
+
+        repository.setCookiePath("/");
+        repository.setCookieCustomizer(cookie -> cookie
+                .sameSite("Lax")
+                .secure(false)
+        );
+
+        return repository;
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowedOrigins(
-                List.of("http://127.0.0.1:5500", "http://localhost:5500"));
+                List.of(
+                        "http://localhost:5500",
+                        "http://127.0.0.1:5500"
+                )
+        );
+
         configuration.setAllowedMethods(
-                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Content-Type", "X-XSRF-TOKEN"));
+                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        );
+
+        configuration.setAllowedHeaders(
+                List.of("Content-Type", "X-XSRF-TOKEN")
+        );
+
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 
@@ -70,20 +104,36 @@ public class SecurityConfig {
         http
             .cors(cors -> {})
             .csrf(csrf -> csrf
-                    .csrfTokenRepository(
-                            CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .csrfTokenRepository(csrfTokenRepository())
                     .csrfTokenRequestHandler(
-                            new CsrfTokenRequestAttributeHandler())
+                            new XorCsrfTokenRequestAttributeHandler())
                     .ignoringRequestMatchers(
-                            "/api/auth/register", "/api/auth/login"))
+                            "/api/auth/register",
+                            "/api/auth/login"
+                    )
+            )
             .authenticationProvider(authenticationProvider)
             .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                    .sessionCreationPolicy(
+                            SessionCreationPolicy.IF_REQUIRED)
+            )
+            .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessHandler(
+                            (request, response, authentication) ->
+                                    response.setStatus(
+                                            HttpServletResponse.SC_NO_CONTENT)
+                    )
+            )
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(
                             HttpMethod.POST,
                             "/api/auth/register",
                             "/api/auth/login"
+                    ).permitAll()
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/auth/csrf"
                     ).permitAll()
                     .anyRequest().authenticated()
             );

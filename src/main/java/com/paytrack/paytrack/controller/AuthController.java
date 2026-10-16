@@ -96,9 +96,10 @@ public class AuthController {
             );
         }
     }
-    @GetMapping("/csrf")
-    public String getCsrfToken(CsrfToken csrfToken) {
-        return csrfToken.getToken();
+   @GetMapping("/csrf")
+    public CsrfToken getCsrfToken(CsrfToken csrfToken) {
+        csrfToken.getToken();
+        return csrfToken;
     }
 
 }
