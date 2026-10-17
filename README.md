@@ -25,6 +25,15 @@ paytrack/
 ├── src/
 │   └── main/
 │       ├── java/
+│       │   └── com/paytrack/paytrack/
+│       │       ├── config/
+│       │       ├── controller/
+│       │       ├── dto/
+│       │       ├── entity/
+│       │       ├── exception/
+│       │       ├── repository/
+│       │       ├── service/
+│       │       └── PaytrackApplication.java
 │       └── resources/
 │           └── application.properties
 ├── frontend/
@@ -33,8 +42,9 @@ paytrack/
 │   ├── register.html
 │   ├── style.css
 │   └── script.js
-├── pom.xml
+├── .gitignore
 ├── mvnw.cmd
+├── pom.xml
 └── README.md
 ```
 
