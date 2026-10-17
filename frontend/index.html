@@ -3,38 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayTrack — Merchant Operations</title>
+    <meta name="theme-color" content="#153e38">
+    <title>PayTrack — Payment Operations</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <aside class="sidebar">
-        <a href="#" class="brand">
+        <a href="#" class="brand" aria-label="PayTrack home">
             <span class="brand-mark">p.</span>
-            <span>paytrack<small>MERCHANT OPERATIONS</small></span>
+            <span class="brand-name">
+                paytrack
+                <small>PAYMENT OPERATIONS</small>
+            </span>
         </a>
 
         <p class="nav-label">WORKSPACE</p>
-        <nav>
-            <a href="#" class="nav-link">
-                <span>01</span> Overview
+
+        <nav aria-label="Main navigation">
+            <a href="#overview" class="nav-link active" id="overviewNav">
+                <span class="nav-icon">◫</span>
+                Overview
             </a>
-            <a href="#issues" class="nav-link active">
-                <span>02</span> Payment issues
+            <a href="#issues" class="nav-link" id="issuesNav">
+                <span class="nav-icon">▤</span>
+                Payment issues
             </a>
         </nav>
 
         <div class="sidebar-note">
             <span class="note-dot"></span>
-            LOCAL ENVIRONMENT
-            <p>Development workspace</p>
+            <div>
+                <strong>Development mode</strong>
+                <p>Local workspace</p>
+            </div>
         </div>
 
         <div class="profile">
-            <div class="avatar">AS</div>
-            <div>
+            <div class="avatar">PT</div>
+            <div class="profile-info">
                 <strong>Support team</strong>
-                <small>Workspace member</small>
+                <small>Payment support</small>
             </div>
         </div>
     </aside>
@@ -42,32 +51,40 @@
     <main class="main-content">
 
         <header class="page-top">
-            <span>WORKSPACE / PAYMENT ISSUES</span>
-            <span class="date-label">PAYMENT OPERATIONS · 2026</span>
+            <div>
+                <span class="breadcrumb">Workspace</span>
+                <span class="breadcrumb-separator">/</span>
+                <span>Overview</span>
+            </div>
+            <span class="environment-label">
+                <span class="note-dot"></span>
+                LOCAL ENVIRONMENT
+            </span>
         </header>
 
-        <section class="intro">
+        <section class="intro" id="overview">
             <div>
-                <p class="eyebrow">THE DAILY DESK <span>—</span> 01</p>
-                <h1>Payment<br><em>issues.</em></h1>
+                <p class="eyebrow">PAYMENT SUPPORT</p>
+                <h1>Stay on top of<br>every <em>issue.</em></h1>
                 <p class="intro-text">
-                    A clearer view of the problems that need attention.
+                    Track reported payment problems and keep every case moving.
                 </p>
             </div>
 
             <div class="intro-action">
-                <span class="issue-caption">MERCHANT SUPPORT</span>
-                <button id="addIssueBtn" class="primary-button">
-                    <span>+</span> Log an issue
+                <span class="issue-caption">ISSUE MANAGEMENT</span>
+                <button type="button" id="addIssueBtn" class="primary-button">
+                    <span aria-hidden="true">+</span>
+                    New issue
                 </button>
             </div>
         </section>
 
-        <section class="stats-strip">
+        <section class="stats-strip" aria-label="Issue summary">
             <div class="stat-item">
-                <span class="stat-label">ALL ISSUES</span>
+                <span class="stat-label">TOTAL ISSUES</span>
                 <strong id="totalCount">—</strong>
-                <span class="stat-note">Across all records</span>
+                <span class="stat-note">All reported cases</span>
             </div>
 
             <div class="stat-item">
@@ -79,68 +96,76 @@
             <div class="stat-item">
                 <span class="stat-label">RESOLVED</span>
                 <strong id="resolvedCount">—</strong>
-                <span class="stat-note">Marked as resolved</span>
-            </div>
-
-            <div class="stat-aside">
-                <span class="orange-line"></span>
-                <p>Small issues, handled<br>one at a time.</p>
+                <span class="stat-note">Successfully closed</span>
             </div>
         </section>
 
         <section class="issues-section" id="issues">
             <div class="section-heading">
                 <div>
-                    <p class="eyebrow">CASE REGISTER <span>—</span> 02</p>
-                    <h2>The issue log</h2>
+                    <p class="eyebrow">CASE MANAGEMENT</p>
+                    <h2>Payment issues</h2>
+                    <p class="section-description">
+                        Review, search and manage reported payment problems.
+                    </p>
                 </div>
-                <button id="refreshBtn" class="text-button">
-                    ↻ Refresh records
-                </button>
-                <button type="button" id="logoutBtn">Log out</button>
+
+                <div class="heading-actions">
+                    <button type="button" id="refreshBtn" class="text-button">
+                        <span aria-hidden="true">↻</span>
+                        Refresh
+                    </button>
+                    <button type="button" id="logoutBtn" class="logout-button">
+                        Log out
+                    </button>
+                </div>
             </div>
 
             <div class="toolbar">
-                <input
-                    type="search"
-                    id="searchInput"
-                    placeholder="Find a transaction or merchant..."
-                    aria-label="Search payment issues"
-                >
+                <div class="search-wrapper">
+                    <span aria-hidden="true" class="search-icon">⌕</span>
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search reference or merchant..."
+                        aria-label="Search payment issues"
+                    >
+                </div>
 
                 <select id="statusFilter" aria-label="Filter by status">
-                    <option value="">Every status</option>
+                    <option value="">All statuses</option>
                     <option value="OPEN">Open</option>
                     <option value="IN_PROGRESS">In progress</option>
                     <option value="RESOLVED">Resolved</option>
                 </select>
 
                 <select id="priorityFilter" aria-label="Filter by priority">
-                    <option value="">Every priority</option>
+                    <option value="">All priorities</option>
                     <option value="HIGH">High priority</option>
                     <option value="MEDIUM">Medium priority</option>
                     <option value="LOW">Low priority</option>
                 </select>
             </div>
 
-            <div id="message" class="message" role="status"></div>
+            <div id="message" class="message" role="status"
+                 aria-live="polite"></div>
 
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>REFERENCE / MERCHANT</th>
-                            <th>WHAT HAPPENED</th>
-                            <th>PRIORITY</th>
-                            <th>STATUS</th>
-                            <th>REPORTED</th>
-                            <th>ACTIONS</th>
+                            <th scope="col">TRANSACTION / MERCHANT</th>
+                            <th scope="col">DESCRIPTION</th>
+                            <th scope="col">PRIORITY</th>
+                            <th scope="col">STATUS</th>
+                            <th scope="col">REPORTED</th>
+                            <th scope="col">ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody id="issuesTableBody">
                         <tr>
                             <td colspan="6" class="empty-state">
-                                Fetching issue records...
+                                Loading payment issues...
                             </td>
                         </tr>
                     </tbody>
@@ -148,23 +173,22 @@
             </div>
 
             <div class="table-footer">
-                <span>PAYTRACK / ISSUE REGISTER</span>
-                <span>FICTIONAL DATA FOR DEMONSTRATION</span>
+                <span>PAYTRACK · ISSUE REGISTER</span>
+                <span>DEMONSTRATION DATA ONLY</span>
             </div>
         </section>
 
         <section id="issueFormSection" class="form-section" hidden>
             <div class="section-heading">
                 <div>
-                    <p class="eyebrow">CASE DETAILS <span>—</span> 03</p>
+                    <p class="eyebrow">ISSUE MANAGEMENT</p>
                     <h2 id="formTitle">Log a new issue</h2>
+                    <p class="section-description">
+                        Enter the details of the reported payment problem.
+                    </p>
                 </div>
-                <span class="form-index">NEW ENTRY</span>
+                <span class="form-index">CASE DETAILS</span>
             </div>
-
-            <p class="form-intro">
-                Add the details below. Fields marked with * are required.
-            </p>
 
             <form id="issueForm">
                 <input type="hidden" id="issueId">
@@ -195,12 +219,12 @@
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="description">What happened? *</label>
+                        <label for="description">Issue description *</label>
                         <textarea
                             id="description"
                             maxlength="500"
-                            rows="3"
-                            placeholder="Describe the payment issue..."
+                            rows="4"
+                            placeholder="Describe what happened..."
                             required
                         ></textarea>
                     </div>
@@ -229,7 +253,8 @@
                         Cancel
                     </button>
                     <button type="submit" id="saveBtn" class="primary-button">
-                        Save issue <span>↗</span>
+                        Save issue
+                        <span aria-hidden="true">↗</span>
                     </button>
                 </div>
             </form>
