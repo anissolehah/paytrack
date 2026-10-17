@@ -21,31 +21,51 @@ PayTrack is a full-stack web application for managing payment issues. Users can 
 
 ## Project Structure
 ```text
+## Project Structure
+
 paytrack/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── com/paytrack/paytrack/
-│       │       ├── config/
-│       │       ├── controller/
-│       │       ├── dto/
-│       │       ├── entity/
-│       │       ├── exception/
-│       │       ├── repository/
-│       │       ├── service/
-│       │       └── PaytrackApplication.java
-│       └── resources/
-│           └── application.properties
+├── .mvn/
+│   └── wrapper/
+│       └── maven-wrapper.properties
 ├── frontend/
 │   ├── index.html
 │   ├── login.html
 │   ├── register.html
-│   ├── style.css
-│   └── script.js
+│   ├── script.js
+│   └── style.css
+├── src/
+│   ├── main/
+│   │   ├── java/com/paytrack/paytrack/
+│   │   │   ├── config/
+│   │   │   │   └── SecurityConfig.java
+│   │   │   ├── controller/
+│   │   │   │   ├── AuthController.java
+│   │   │   │   └── PaymentIssueController.java
+│   │   │   ├── dto/
+│   │   │   │   ├── LoginRequest.java
+│   │   │   │   ├── RegisterRequest.java
+│   │   │   │   └── UserResponse.java
+│   │   │   ├── entity/
+│   │   │   │   ├── PaymentIssue.java
+│   │   │   │   └── User.java
+│   │   │   ├── exception/
+│   │   │   │   └── GlobalExceptionalHandler.java
+│   │   │   ├── repository/
+│   │   │   │   ├── PaymentIssueRepository.java
+│   │   │   │   └── UserRepository.java
+│   │   │   ├── service/
+│   │   │   └── PaytrackApplication.java
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/
+│       └── java/com/paytrack/paytrack/
+│           └── PaytrackApplicationTests.java
+├── .gitattributes
 ├── .gitignore
+├── README.md
+├── mvnw
 ├── mvnw.cmd
-├── pom.xml
-└── README.md
+└── pom.xml
 ```
 
 ## Prerequisites
